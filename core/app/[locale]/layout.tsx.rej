@@ -1,8 +1,0 @@
-@@ -122,6 +123,7 @@
-               </Providers>
-             </AnalyticsProvider>
-           </NuqsAdapter>
-+          <B2BLoader />
-         </NextIntlClientProvider>
-         <VercelComponents />
-         <ContainerQueryPolyfill />
