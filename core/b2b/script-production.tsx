@@ -11,47 +11,33 @@ interface Props {
   token?: string;
   environment: 'staging' | 'production';
   cartId?: string | null;
-  assetsVersion: string;
 }
 
-export function ScriptProduction({ cartId, storeHash, channelId, token, environment, assetsVersion }: Props) {
+export function ScriptProduction({ cartId, storeHash, channelId, token, environment }: Props) {
   useB2BAuth(token);
   useB2BCart(cartId);
 
-  const B2B_LOADER_URL = `https://store-${storeHash}.mybigcommerce.com/content/b2b-${assetsVersion}`;
-
   return (
     <>
-      <Script>
+      <Script id="b2b-config">
         {`
-        window.b3CheckoutConfig = {
-          routes: {
-            dashboard: '/#/dashboard',
-          },
-        }
-        window.B3 = {
-          setting: {
-            store_hash: '${storeHash}',  
-            channel_id: ${channelId},
-          },
-        }
+            window.B3 = {
+              setting: {
+                store_hash: '${storeHash}',
+                channel_id: ${channelId},
+                platform: 'catalyst',
+                cart_url: '/cart',
+              }
+            }
         `}
       </Script>
       <Script
+        data-channelid={channelId}
+        data-environment={environment}
+        data-storehash={storeHash}
+        src={`https://cdn.bundleb2b.net/b2b/${environment}/storefront/headless.js`}
         type="module"
-        crossOrigin=""
-        src={`${B2B_LOADER_URL}/index.js`}
-      ></Script>
-      <Script
-        noModule
-        crossOrigin=""
-        src={`${B2B_LOADER_URL}/polyfills-legacy.js`}
-      ></Script>
-      <Script
-        noModule
-        crossOrigin=""
-        src={`${B2B_LOADER_URL}/index-legacy.js`}
-      ></Script>
+      />
     </>
   );
 }
